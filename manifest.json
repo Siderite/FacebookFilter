@@ -1,0 +1,26 @@
+{
+	"manifest_version" : 2,
+
+	"name" : "Siderite's Facebook Filter",
+	"description" : "Split your Facebook page output into tabbed categories",
+	"version" : "0.0.1",
+
+	"permissions" : [
+		"webRequest",
+		"webRequestBlocking",
+		"<all_urls>",
+		"storage"
+	],
+	"browser_action" : {
+		"default_icon" : "icon.png"
+	},
+	"background" : {
+		"scripts" : ["background.js"],
+		"persistent" : true
+	},
+	"web_accessible_resources": [
+    	"jquery-2.2.2.min.js",
+		"fbFilter.js",
+		"statusProcessor.css"
+	]
+}
