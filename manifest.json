@@ -2,8 +2,8 @@
 	"manifest_version" : 2,
 
 	"name" : "Siderite's Facebook Filter",
-	"description" : "Split your Facebook page output into tabbed categories",
-	"version" : "0.0.1",
+	"description" : "Split your Facebook page output into categories",
+	"version" : "0.0.2",
 
 	"permissions" : [
 		"webRequest",

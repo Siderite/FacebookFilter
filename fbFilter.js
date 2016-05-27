@@ -1,5 +1,8 @@
 function Processor(extra) {
-	ex$.extend(this, extra);
+	if (!extra) return;
+	for (var k in extra) {
+		this[k]=extra[k];
+	}
 }
 Processor.prototype = {
 	init : function () {},
@@ -102,7 +105,8 @@ StatusProcessor.prototype = new Processor({
 		extractInfo : function (elem, info) {
 			var $ = window.ex$;
 			var status = {};
-			var statusElem = $('._5pbw:first', elem);
+			//var statusElem = $('._5pbw:first', elem);
+			var statusElem=getByFt({tn:'C'},elem).first();
 			this.populateStatus(statusElem, status);
 			/*if (status.type == 'unknown')
 				console.log(status);*/
@@ -118,6 +122,7 @@ StatusProcessor.prototype = new Processor({
 	});
 
 function getFt(jq) {
+	var $ = window.ex$;
 	var val = $(jq).attr('data-ft');
 	if (!val)
 		return;
@@ -138,9 +143,10 @@ function getByFt(obj, context) {
 }
 
 var processors = [];
-processors.push(new StatusProcessor());
 
 function init() {
+
+	processors.push(new StatusProcessor());
 
 	processors.forEach(function (prc) {
 		prc.init();

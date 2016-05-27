@@ -51,7 +51,7 @@ function initJqueryOnWebPage(tab, callback) {
 	};
 	// execute the content of the function f
 	remex(tab.id, f, function () {
-		if (typeof(callback)=='function') callback();
+		if (typeof(callback)=='function') setTimeout(callback,100);
 	}); // this should log in the background/popup page console
 }
 
