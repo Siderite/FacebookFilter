@@ -1,65 +1,101 @@
-﻿* { transition: all .2s ease-in-out; }
-._5jmm:hover {
+﻿.statusProcessor * { transition: all .2s ease-in-out; }
+.statusProcessor .story:hover {
 	opacity:1 !important;
 	transform:scale(1) !important;
+	zoom:1 !important;
+	border: none !important;
 }
-.shared_link {
+.statusProcessor .shared_link {
 	opacity:0.8;
-	transform:scale(0.8);
+	transform:scale(0.9);
+	zoom:0.8;
 }
-.shared_photo {
+.statusProcessor .shared_photo {
 	opacity:0.5;
-	transform:scale(0.5);
+	transform:scale(0.9);
+	zoom:0.5;
 }
-.shared_video {
+.statusProcessor .shared_video {
 	opacity:0.5;
-	transform:scale(0.5);
+	transform:scale(0.9);
+	zoom:0.5;
 }
-.own_content {
+.statusProcessor .own_content {
 	opacity:1;
 	transform:scale(1);
+	zoom:1;
+	border: black 1px dashed;
 }
-.added_photos {
+.statusProcessor .feeling {
+	opacity:0.9;
+	transform:scale(0.9);
+	zoom:0.9;
+}
+.statusProcessor .added_photos {
 	opacity:0.3;
-	transform:scale(0.3);
+	transform:scale(0.9);
+	zoom:0.3;
 }
-.was_tagged_photo,.was_tagged_photos,.was_tagged_this,.was_mentioned_post {
+.statusProcessor .was_tagged_photo,
+.statusProcessor .was_tagged_photos,
+.statusProcessor .was_tagged_this,
+.statusProcessor .was_mentioned_post {
 	opacity:0.3;
-	transform:scale(0.3);
+	transform:scale(0.9);
+	zoom:0.3;
 }
-.shared_post {
+.statusProcessor .shared_post {
 	opacity:0.5;
-	transform:scale(0.5);
+	transform:scale(0.9);
+	zoom:0.5;
 }
-.posted_updates {
+.statusProcessor .posted_updates {
 	opacity:0.7;
-	transform:scale(0.7);
+	transform:scale(0.9);
+	zoom:0.7;
 }
-.shared_album {
+.statusProcessor .shared_album {
 	opacity:0.3;
-	transform:scale(0.3);
+	transform:scale(0.9);
+	zoom:0.3;
 }
-.check_in {
+.statusProcessor .check_in {
 	opacity:0.9;
 	transform:scale(0.9);
+	zoom:0.9;
 }
-.reacted_to_this {
+.statusProcessor .reacted_to_this {
 	opacity:0.5;
-	transform:scale(0.5);
+	transform:scale(0.9);
+	zoom:0.5;
 }
-.commented_on_post,.commented_on_this,.replied_to_a_comment_on_this {
+.statusProcessor .commented_on_post,
+.statusProcessor .commented_on_this,
+.statusProcessor .replied_to_a_comment_on_this {
 	opacity:0.5;
-	transform:scale(0.5);
+	transform:scale(0.9);
+	zoom:0.5;
 }
-.liked_this {
+.statusProcessor .liked_this {
 	opacity:0.5;
-	transform:scale(0.5);
+	transform:scale(0.9);
+	zoom:0.5;
 }
-.going_to_event,.went_to_event {
+.statusProcessor .going_to_event,
+.statusProcessor .went_to_event {
 	opacity:1;
 	transform:scale(1);
+	zoom:1;
+	border: black 1px dashed;
 }
-.updated_profile_picture {
+.statusProcessor .updated_profile_picture {
 	opacity:0.9;
 	transform:scale(0.9);
+	zoom:0.9;
+}
+.statusProcessor .unknown {
+	opacity:1;
+	transform:scale(1);
+	zoom:1;
+	border: pink 0.5px dashed;
 }

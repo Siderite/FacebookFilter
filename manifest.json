@@ -2,8 +2,8 @@
 	"manifest_version" : 2,
 
 	"name" : "Siderite's Facebook Filter",
-	"description" : "Split your Facebook page output into categories",
-	"version" : "0.0.2",
+	"description" : "Focus on stories with content versus shares and likes on the Facebook page",
+	"version" : "0.5.0",
 
 	"permissions" : [
 		"webRequest",
@@ -12,7 +12,7 @@
 		"storage"
 	],
 	"browser_action" : {
-		"default_icon" : "icon.png"
+		"default_icon" : "icon_disabled.png"
 	},
 	"background" : {
 		"scripts" : ["background.js"],

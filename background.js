@@ -1,3 +1,5 @@
+(function() {
+
 // executeScript's a function rather than a string
 function remex(tabId, func, callback) {
 	chrome.tabs.executeScript(tabId, {
@@ -8,20 +10,20 @@ function remex(tabId, func, callback) {
 	});
 }
 
-function windowContextRemex(tabId,srcOrFunc,callback) {
-	var code='var script = document.createElement("script");';
-	switch(typeof(srcOrFunc)) {
-		case 'function':
-			var f=JSON.stringify(srcOrFunc.toString());
-			code+='script.innerHTML = "('+f.substr(1,f.length-2)+')();";';
-			break;
-		case 'string':
-			code+='script.src="'+chrome.extension.getURL(srcOrFunc)+'";';
-			break;
-		default:
-			throw "srcOrFunc needs to be a string URL or a contextless function";
+function windowContextRemex(tabId, srcOrFunc, callback) {
+	var code = 'var script = document.createElement("script");';
+	switch (typeof(srcOrFunc)) {
+	case 'function':
+		var f = JSON.stringify(srcOrFunc.toString());
+		code += 'script.innerHTML = "(' + f.substr(1, f.length - 2) + ')();";';
+		break;
+	case 'string':
+		code += 'script.src="' + chrome.extension.getURL(srcOrFunc) + '";';
+		break;
+	default:
+		throw "srcOrFunc needs to be a string URL or a contextless function";
 	}
-	code+='document.body.appendChild(script)';
+	code += 'document.body.appendChild(script)';
 	chrome.tabs.executeScript(tabId, {
 		code : code
 	}, function () {
@@ -42,7 +44,7 @@ function initJqueryOnWebPage(tab, callback) {
 		script.onload = function () {
 			var noc = document.createElement('script');
 			// this should display in the web page's console
-			noc.innerHTML = 'window.ex$=jQuery.noConflict(true);window.extensionBaseUrl=\''+chrome.extension.getURL('')+'\';';
+			noc.innerHTML = 'window.ex$=jQuery.noConflict(true);window.extensionBaseUrl=\'' + chrome.extension.getURL('') + '\';';
 			document.body.appendChild(noc);
 		};
 		// use extension.getURL to get at the packed script
@@ -51,24 +53,74 @@ function initJqueryOnWebPage(tab, callback) {
 	};
 	// execute the content of the function f
 	remex(tab.id, f, function () {
-		if (typeof(callback)=='function') setTimeout(callback,100);
+		if (typeof(callback) == 'function')
+			setTimeout(callback, 100);
 	}); // this should log in the background/popup page console
 }
 
 function fixConsoleWarning() {
-	__d("Chromedome", ["fbt"], function(a, b, c, d, e, f, g) {
-    	f.start = function(h) {	};
+	__d("Chromedome", ["fbt"], function (a, b, c, d, e, f, g) {
+		f.start = function (h) {};
+	});
+}
+
+var enabled;
+chrome.storage.local.get('enabled',function(result) {
+	enabled = !result||!result.enabled
+			? true
+			: result.enabled;
+
+function refreshIcon(tabId,value) {
+	chrome.browserAction.setIcon({
+		path : value
+					?'icon.png'
+					:'icon_disabled.png',
+		tabId : tabId
+	});
+}
+
+function sendEnabled(tab,enabled) {
+	if (!tab) return;
+	if (!tab.url || !/http[s]?:\/\/\w+\.facebook\.com/i.test(tab.url)) return;
+	refreshIcon(tab.id,enabled);
+
+	var code = 'var script = document.createElement("script");';
+	code += 'script.innerHTML = "Facebook.toggle('+enabled+');";';
+	code += 'document.body.appendChild(script)';
+	chrome.tabs.executeScript(tab.id, {
+		code : code
+	}, function () {
+		chrome.storage.local.set({enabled:enabled});
 	});
 }
 
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-	if (!tab.url||tab.url.toLowerCase() != 'https://www.facebook.com/')
+	refreshIcon(tab.id,false);
+	if (!tab.url || !/http[s]?:\/\/\w+\.facebook\.com/i.test(tab.url))
 		return;
-	windowContextRemex(tab.id, fixConsoleWarning, function () {
-		if (changeInfo && changeInfo.status == 'complete') {
-			initJqueryOnWebPage(tab, function () {
-				windowContextRemex(tab.id, 'fbFilter.js');
+	if (changeInfo && changeInfo.status == 'loading') {
+		windowContextRemex(tab.id, fixConsoleWarning);
+	}
+	refreshIcon(tab.id,enabled);
+	if (changeInfo && changeInfo.status == 'complete') {
+		initJqueryOnWebPage(tab, function () {
+			windowContextRemex(tab.id, 'fbFilter.js',function() {
+				setTimeout(function() {
+					sendEnabled(tab,enabled);
+				},500);
 			});
-		}
+		});
+	}
+});
+
+chrome.browserAction.onClicked.addListener(function() {
+	enabled=!enabled;
+	chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+		if (!tabs) return;
+		sendEnabled(tabs[0],enabled);
 	});
 });
+
+});
+
+})();

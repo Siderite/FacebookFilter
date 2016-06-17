@@ -1,2 +1,2 @@
 # FacebookFilter
-Extract features from Facebook posts and process them accordingly
+Focus on stories with content versus shares and likes on the Facebook page
