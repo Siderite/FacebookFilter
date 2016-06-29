@@ -39,51 +39,128 @@
 				},
 				populateStatus : function (elem, status) {
 					elem = $(elem);
+					var m;
 					var text = elem.text().replace('\u200E', '').replace('\xA0', ' ');
+					if (text.endsWith('.')) text=text.substr(0,text.length-1);
 					var html = elem.html();
-					var who = $('a:first', elem).text();
-					if (who)
-						status.who = who;
-					if (elem.text() == who) {
-						status.type = 'own content';
+					var who = this.fb.getWho(elem);
+					var whoText=[];
+					who.each(function() {
+						var w=$(this).text();
+						if (text.startsWith(w)) {
+							text=text.substr(w.length).trim();
+							whoText.push(w);
+						}
+						m=/^(?:and|with|,)\s+(.*)$/.exec(text);
+						if (m) text=m[1];
+					});
+					m=/^(\d+\s+others)\s*(.*)$/.exec(text);
+					if (m) {
+						whoText.push(m[1]);
+						text=m[2];
+					}
+					if (whoText.length)
+						status.who = whoText;
+					status.type=[];
+					if (text=='') {
+						status.type.push('own content');
 						return;
 					}
 					if (/'s Birthday$/.test(text)) {
-						status.type = 'birthday';
+						status.type.push('birthday');
 						// do birthday
 						return;
 					}
-					var m = / (shared|reacted to|like[sd]?|commented on|replied to a comment on|is interested in|updated|added|was tagged|posted|was mentioned|going to|went to) .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this)/.exec(text);
+					m = /(shared|updated|added|posted) .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this|memory|profile)/.exec(text);
 					if (m) {
-						status.type = m[1] + ' ' + m[2];
+						status.type.push(m[1]);
+						status.type.push(m[1] + ' ' + m[2]);
 						return;
 					}
-					if (/ feeling /.test(text)) {
-						status.type = 'feeling';
+					m = /(commented|replied to a comment) on .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this|memory|profile)/.exec(text);
+					if (m) {
+						if (m[1]!='commented') status.type.push('commented');
+						status.type.push(m[1]);
+						status.type.push(m[1] + ' ' + m[2]);
 						return;
 					}
-					if (/ going to an event/.test(text)) {
-						status.type = 'going to event';
+					m = /(?:are|is) (interested) .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this|memory|profile)/.exec(text);
+					if (m) {
+						status.type.push(m[1]);
+						status.type.push(m[1] + ' ' + m[2]);
 						return;
 					}
-					if (new RegExp('^' + who + '\\s+to\\s+').test(text)) {
-						status.type = 'content shared to friend';
+					m = /was (tagged|mentioned) .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this|memory|profile)/.exec(text);
+					if (m) {
+						status.type.push(m[1]);
+						status.type.push(m[1] + ' ' + m[2]);
 						return;
 					}
-					if (new RegExp('^' + who + '\\s+at\\s+').test(text)) {
-						status.type = 'check in';
+					m = /(like)[sd]? .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this|memory|profile)/.exec(text);
+					if (m) {
+						status.type.push(m[1]);
+						status.type.push(m[1] + ' ' + m[2]);
 						return;
 					}
-					if (new RegExp('^' + who + '\\s+is\\s+with\\s+.*\\s+at\\s+').test(text)) {
-						status.type = 'check in';
+					m = /(reacted|going|went) to .*(video|photo[s]?|profile picture|post|link|event|album|update[s]?|this|memory|profile)/.exec(text);
+					if (m) {
+						status.type.push(m[1]);
+						status.type.push(m[1] + ' ' + m[2]);
 						return;
 					}
-					if (new RegExp('^' + who + '\\s+is\\s+live\\s+').test(text)) {
-						status.type = 'live event';
+					if (/feeling /.test(text)) {
+						status.type.push('feeling');
 						return;
 					}
-					status.type = 'unknown';
+					if (/^to\s+/.test(text)) {
+						status.type.push('shared');
+						status.type.push('shared to friend');
+						return;
+					}
+					if (/^(checked in|at|in)\s+/.test(text)) {
+						status.type.push('check in');
+						return;
+					}
+					if (/^\s+is\s+with\s+.*\s+at\s+/.test(text)) {
+						status.type.push('check in');
+						return;
+					}
+					if (/^is\s+live\s+/.test(text)) {
+						status.type.push('live');
+						return;
+					}
+					if (/^(was|were|are|is) watching /.test(text)) {
+						status.type.push('watching');
+						return;
+					}
+					if (/^like[sd]? /.test(text)) {
+						status.type.push('like');
+						return;
+					}
+					if (/^completed /.test(text)) {
+						status.type.push('completed');
+						return;
+					}
+					m = /^([^\s]+)\s/.exec(text);
+					if (m) {
+						status.type.push(m[1]);
+					}
+					status.type.push('unknown');
 					status.temp = text || html;
+				},
+				populateShared : function (elem, status) {
+					elem = $(elem);
+					var img=$('img',elem).filter(function() { return $(this).width()>100&&$(this).height()>100; });
+					var video=$('video',elem).filter(function() { return $(this).width()>100&&$(this).height()>100; });
+					if (video.length) {
+						status.shared='video';
+						return;
+					}
+					if (img.length) {
+						status.shared='image';
+						return;
+					}
+					status.shared='text';
 				},
 				extractInfo : function (elem, info) {
 					var status = {};
@@ -91,14 +168,28 @@
 							tn : 'C'
 						}, elem).first();
 					this.populateStatus(statusElem, status);
+					var sharedElem=this.fb.getStorySharedContent(elem);
+					this.populateShared(sharedElem, status);
 					info.status = status;
 				},
 				process : function (elem, info) {
-					if (!info.status || !info.status.type)
+					if (!info.status)
 						return;
 					elem = $(elem);
-					var className = info.status.type.replace(/\s+/g, '_');
-					elem.addClass(className);
+					if (info.status.type) {
+						//console.log(info.status.type);
+						info.status.type.forEach(function(type) {
+							elem.addClass('status_'+type.replace(/\s+/g, '_'));
+						});
+					}
+					if (info.status.who) {
+						info.status.who.forEach(function(who) {
+							elem.addClass('who_'+who.replace(/\s+/g, '_'));
+						});
+					}
+					if (info.status.shared) {
+						elem.addClass('shared_'+info.status.shared.replace(/\s+/g, '_'));
+					}
 				},
 				dispose:function() {
 					$('body').removeClass('statusProcessor');
@@ -133,18 +224,31 @@
 				return $('div[id^=hyperfeed_story_id_]', feed);
 			},
 			getStoryHeader : function (story) {
-				return this.getByFt('{tn:"C"}', story).first();
+				var self=this;
+				var result=$();
+				$(story).each(function() {
+					result=result.add(self.getByFt({tn:'C'}, this).first());
+				});
+				return result;
+			},
+			getWho : function (header) {
+				return $('a.profileLink,a[data-hovercard]',header);
 			},
 			getStoryUserContent : function (story) {
 				return $('div.userContent', story);
 			},
 			getStorySharedContent : function (story) {
-				var uc=this.getStoryUserContent(story);
-				if (uc.length==1) {
-					return uc.next(); // just one user content, get shared
-				}
-				var h=this.getStoryHeader(story); //list of several users content, shared follows the header
-				return h.next();
+				var self=this;
+				var result=$();
+				$(story).each(function() {
+					var h=self.getStoryHeader(this); 
+					if (h.next().is('.mtm')) {
+						result=result.add(h.next()); //list of several users content, shared follows the header
+					}
+					var uc=self.getStoryUserContent(this);
+					result=result.add(uc.next()); // just one user content, get shared
+				});
+				return result;
 			},
 			getStoryReactions : function (story) {
 				return $('div.userContent', story).parent().next(); //can be more than one
@@ -246,6 +350,6 @@
 		this.Facebook=fb;
 	}
 
-	InitExtension(window.ex$);
+	InitExtension(window.ex$||window.jQuery);
 
 })();

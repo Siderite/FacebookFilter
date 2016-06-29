@@ -1,101 +1,129 @@
 ﻿.statusProcessor * { transition: all .2s ease-in-out; }
+
 .statusProcessor .story:hover {
 	opacity:1 !important;
 	transform:scale(1) !important;
 	zoom:1 !important;
 	border: none !important;
 }
-.statusProcessor .shared_link {
-	opacity:0.8;
-	transform:scale(0.9);
-	zoom:0.8;
+
+.statusProcessor .story:hover img,
+.statusProcessor .story:hover video
+{
+	opacity:1 !important;
 }
-.statusProcessor .shared_photo {
-	opacity:0.5;
-	transform:scale(0.9);
-	zoom:0.5;
-}
-.statusProcessor .shared_video {
-	opacity:0.5;
-	transform:scale(0.9);
-	zoom:0.5;
-}
-.statusProcessor .own_content {
-	opacity:1;
-	transform:scale(1);
-	zoom:1;
-	border: black 1px dashed;
-}
-.statusProcessor .feeling {
-	opacity:0.9;
-	transform:scale(0.9);
-	zoom:0.9;
-}
-.statusProcessor .added_photos {
-	opacity:0.3;
-	transform:scale(0.9);
-	zoom:0.3;
-}
-.statusProcessor .was_tagged_photo,
-.statusProcessor .was_tagged_photos,
-.statusProcessor .was_tagged_this,
-.statusProcessor .was_mentioned_post {
-	opacity:0.3;
-	transform:scale(0.9);
-	zoom:0.3;
-}
-.statusProcessor .shared_post {
-	opacity:0.5;
-	transform:scale(0.9);
-	zoom:0.5;
-}
-.statusProcessor .posted_updates {
-	opacity:0.7;
-	transform:scale(0.9);
-	zoom:0.7;
-}
-.statusProcessor .shared_album {
-	opacity:0.3;
-	transform:scale(0.9);
-	zoom:0.3;
-}
-.statusProcessor .check_in {
-	opacity:0.9;
-	transform:scale(0.9);
-	zoom:0.9;
-}
-.statusProcessor .reacted_to_this {
-	opacity:0.5;
-	transform:scale(0.9);
-	zoom:0.5;
-}
-.statusProcessor .commented_on_post,
-.statusProcessor .commented_on_this,
-.statusProcessor .replied_to_a_comment_on_this {
-	opacity:0.5;
-	transform:scale(0.9);
-	zoom:0.5;
-}
-.statusProcessor .liked_this {
-	opacity:0.5;
-	transform:scale(0.9);
-	zoom:0.5;
-}
-.statusProcessor .going_to_event,
-.statusProcessor .went_to_event {
-	opacity:1;
-	transform:scale(1);
-	zoom:1;
-	border: black 1px dashed;
-}
-.statusProcessor .updated_profile_picture {
-	opacity:0.9;
-	transform:scale(0.9);
-	zoom:0.9;
-}
-.statusProcessor .unknown {
+
+
+.statusProcessor .status_unknown {
 	opacity:1;
 	transform:scale(1);
 	zoom:1;
 	border: pink 0.5px dashed;
+}
+.statusProcessor .status_own_content {
+	opacity:1;
+	transform:scale(1);
+	zoom:1;
+	border: black 1px dashed;
+}
+
+.statusProcessor .status_birthday {
+	transform:scale(0.9);
+	opacity:0.9;
+	zoom:0.9;
+}
+.statusProcessor .status_shared {
+	transform:scale(0.9);
+	opacity:0.7;
+	zoom:0.7;
+}
+.statusProcessor .status_updated {
+	transform:scale(0.9);
+	opacity:0.5;
+	zoom:0.5;
+}
+.statusProcessor .status_added {
+	transform:scale(0.9);
+	opacity:0.5;
+	zoom:0.5;
+}
+.statusProcessor .status_posted {
+	transform:scale(0.9);
+	opacity:0.7;
+	zoom:0.7;
+}
+.statusProcessor .status_commented {
+	transform:scale(0.9);
+	opacity:0.6;
+	zoom:0.6;
+}
+.statusProcessor .status_interested {
+	transform:scale(0.9);
+	opacity:0.8;
+	zoom:0.8;
+}
+.statusProcessor .status_tagged {
+	transform:scale(0.9);
+	opacity:0.4;
+	zoom:0.4;
+}
+.statusProcessor .status_mentioned {
+	transform:scale(0.9);
+	opacity:0.4;
+	zoom:0.4;
+}
+.statusProcessor .status_like {
+	transform:scale(0.9);
+	opacity:0.8;
+	zoom:0.8;
+}
+.statusProcessor .status_reacted {
+	transform:scale(0.9);
+	opacity:0.8;
+	zoom:0.8;
+}
+.statusProcessor .status_going {
+	transform:scale(0.9);
+	opacity:0.9;
+	zoom:0.9;
+}
+.statusProcessor .status_went {
+	transform:scale(0.9);
+	opacity:0.7;
+	zoom:0.7;
+}
+.statusProcessor .status_feeling {
+	transform:scale(0.9);
+	opacity:0.7;
+	zoom:0.7;
+}
+.statusProcessor .status_check_in {
+	transform:scale(0.9);
+	opacity:0.7;
+	zoom:0.7;
+}
+.statusProcessor .status_live {
+	transform:scale(0.9);
+	opacity:0.9;
+	zoom:0.9;
+}
+.statusProcessor .status_watching {
+	transform:scale(0.9);
+	opacity:0.7;
+	zoom:0.7;
+}
+.statusProcessor .status_completed {
+	transform:scale(0.9);
+	opacity:0.4;
+	zoom:0.4;
+}
+
+.statusProcessor .shared_video video {
+	opacity:0.7;
+}
+.statusProcessor .shared_image img {
+	opacity:0.5;
+}
+.statusProcessor .shared_text {
+	opacity:0.9;
 }

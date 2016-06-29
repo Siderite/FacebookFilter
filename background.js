@@ -66,7 +66,7 @@ function fixConsoleWarning() {
 
 var enabled;
 chrome.storage.local.get('enabled',function(result) {
-	enabled = !result||!result.enabled
+	enabled = !result||typeof(result.enabled)=='undefined'
 			? true
 			: result.enabled;
 
