@@ -30,11 +30,6 @@
 		StatusProcessor.prototype = new Processor({
 				init : function (fb) {
 					this.fb = fb;
-					$("<link/>", {
-						rel : "stylesheet",
-						type : "text/css",
-						href : getURL("statusProcessor.css")
-					}).appendTo("head");
 					$('body').addClass('statusProcessor');
 				},
 				populateStatus : function (elem, status) {
@@ -345,9 +340,13 @@
 
 		var fb = new Facebook();
 		fb.processors=[new StatusProcessor()];
-		//fb.initProcessors();
 
-		this.Facebook=fb;
+		chrome.runtime.onMessage.addListener(
+		  function(request, sender, sendResponse) {
+		    if (typeof(request.enabled) != 'undefined')
+		      fb.toggle(request.enabled);
+		    }
+		);
 	}
 
 	InitExtension(window.ex$||window.jQuery);
